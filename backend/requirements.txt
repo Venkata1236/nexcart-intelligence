@@ -12,7 +12,7 @@ alembic==1.13.1           # Database migration tool for schema versioning with S
 redis==5.0.4              # Python client for Redis (caching, pub/sub, session storage)
 
 # ML — Recommendations
-scikit-surprise==1.1.3    # Library for building recommendation systems (collaborative filtering, etc.)
+scikit-surprise==1.1.4    # Library for building recommendation systems (collaborative filtering, etc.)
 scikit-learn==1.4.2       # General-purpose ML toolkit (classification, regression, clustering)
 numpy==1.26.4             # Core numerical computing library (arrays, math operations)
 pandas==2.2.2             # Data analysis and manipulation library (DataFrames, CSV/Excel handling)
