@@ -1,0 +1,39 @@
+# Web Framework
+fastapi==0.111.0          # Modern, high-performance Python web framework for APIs
+uvicorn[standard]==0.29.0 # ASGI server to run FastAPI apps; [standard] adds speed-boosting extras
+python-multipart==0.0.9   # Enables handling of file uploads (multipart/form-data)
+
+# Database
+sqlalchemy==2.0.30        # ORM for interacting with relational databases in Python
+asyncpg==0.29.0           # Async driver for PostgreSQL, supports non-blocking queries
+alembic==1.13.1           # Database migration tool for schema versioning with SQLAlchemy
+
+# Redis
+redis==5.0.4              # Python client for Redis (caching, pub/sub, session storage)
+
+# ML — Recommendations
+scikit-surprise==1.1.3    # Library for building recommendation systems (collaborative filtering, etc.)
+scikit-learn==1.4.2       # General-purpose ML toolkit (classification, regression, clustering)
+numpy==1.26.4             # Core numerical computing library (arrays, math operations)
+pandas==2.2.2             # Data analysis and manipulation library (DataFrames, CSV/Excel handling)
+
+# ML — Sentiment
+transformers==4.41.0      # Hugging Face library for NLP models (BERT, GPT, etc.)
+torch==2.3.0              # PyTorch deep learning framework for training/inference
+datasets==2.19.1          # Hugging Face library for loading and processing datasets
+
+# LangChain + Groq
+langchain==0.2.0          # Framework for building LLM-powered apps (chains, agents, RAG)
+langchain-groq==0.1.3     # Integration with Groq hardware accelerators for faster inference
+langchain-community==0.2.0# Community-contributed LangChain integrations
+faiss-cpu==1.8.0          # Facebook AI Similarity Search, for vector search in RAG pipelines
+
+# Utilities
+pydantic-settings==2.2.1  # Configuration management using Pydantic models
+python-dotenv==1.0.1      # Loads environment variables from .env files
+loguru==0.7.2             # Modern logging library with simple, powerful API
+httpx==0.27.0             # Async HTTP client for making API calls
+
+# Testing
+pytest==8.2.0             # Python testing framework
+pytest-asyncio==0.23.6    # Adds support for testing async code with pytest
