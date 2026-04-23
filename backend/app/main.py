@@ -8,6 +8,7 @@ from app.ml.collaborative import collaborative_filter
 from app.ml.sentiment import sentiment_analyzer
 from app.models.schemas import HealthResponse
 from app.routes import recommend, sentiment, product
+from app.routes import recommend, sentiment, product, agent
 
 
 # ─────────────────────────────────────────
@@ -77,6 +78,7 @@ app.add_middleware(
 app.include_router(recommend.router, tags=["Recommendations"])
 app.include_router(sentiment.router, tags=["Sentiment"])
 app.include_router(product.router,   tags=["Products"])
+app.include_router(agent.router, tags=["Agent"])
 
 
 # ─────────────────────────────────────────
