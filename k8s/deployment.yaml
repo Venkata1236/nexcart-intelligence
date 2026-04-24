@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexcart-api
+  labels:
+    app: nexcart-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nexcart-api
+  template:
+    metadata:
+      labels:
+        app: nexcart-api
+    spec:
+      containers:
+      - name: api
+        image: nexcart-api:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: nexcart-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: nexcart-config
+              key: REDIS_URL
+        - name: GROQ_API_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: nexcart-config
+              key: GROQ_API_KEY
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 20
