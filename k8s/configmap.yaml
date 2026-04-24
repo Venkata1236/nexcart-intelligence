@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nexcart-config
+data:
+  DATABASE_URL: "postgresql+asyncpg://postgres:postgres@nexcart-db:5432/nexcart"
+  REDIS_URL: "redis://nexcart-redis:6379"
+  ENVIRONMENT: "production"
+  GROQ_API_KEY: "gsk_your_key_here"
+  SVD_MODEL_PATH: "saved_models/svd_model.pkl"
+  SENTIMENT_MODEL_PATH: "saved_models/sentiment_model"
+  FAISS_INDEX_PATH: "faiss_index/"
