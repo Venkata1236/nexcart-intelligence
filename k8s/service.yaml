@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexcart-api-service
+  labels:
+    app: nexcart-api
+spec:
+  selector:
+    app: nexcart-api
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexcart-frontend-service
+  labels:
+    app: nexcart-frontend
+spec:
+  selector:
+    app: nexcart-frontend
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  type: LoadBalancer
