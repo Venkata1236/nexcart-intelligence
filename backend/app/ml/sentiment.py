@@ -17,7 +17,7 @@ class SentimentAnalyzer:
     def load(self):
         """Load fine-tuned DistilBERT model + tokenizer from saved_models/"""
         try:
-            model_path = Path(settings.SENTIMENT_MODEL_PATH)
+            model_path = Path("saved_models/sentiment_model")
             if not model_path.exists():
                 logger.warning(f"Sentiment model not found at {model_path} — using pretrained base")
                 model_path = "distilbert-base-uncased"
