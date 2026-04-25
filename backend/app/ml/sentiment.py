@@ -1,4 +1,4 @@
-import torch
+﻿import torch
 import pickle
 import numpy as np
 from pathlib import Path
@@ -17,13 +17,10 @@ class SentimentAnalyzer:
     def load(self):
         """Load fine-tuned DistilBERT model + tokenizer from saved_models/"""
         try:
-            model_path = Path("saved_models/sentiment_model")
-            if not model_path.exists():
-                logger.warning(f"Sentiment model not found at {model_path} — using pretrained base")
-                model_path = "distilbert-base-uncased"
+            model_path = "saved_models/sentiment_model"
 
-            self.tokenizer = DistilBertTokenizer.from_pretrained(str(model_path))
-            self.model = DistilBertForSequenceClassification.from_pretrained(str(model_path))
+            self.tokenizer = DistilBertTokenizer.from_pretrained(model_path)
+            self.model = DistilBertForSequenceClassification.from_pretrained(model_path)
             self.model.to(self.device)
             self.model.eval()
 
@@ -41,7 +38,7 @@ class SentimentAnalyzer:
         Returns label and confidence score.
         """
         if not self.is_loaded:
-            logger.error("Sentiment model not loaded — call load() first")
+            logger.error("Sentiment model not loaded â€” call load() first")
             return {"label": "positive", "confidence": 0.0}
 
         try:
@@ -71,7 +68,7 @@ class SentimentAnalyzer:
 
     def predict_batch(self, texts: list[str]) -> list[dict]:
         """
-        Batch inference — process multiple texts at once.
+        Batch inference â€” process multiple texts at once.
         Splits into chunks of SENTIMENT_BATCH_SIZE for memory efficiency.
         """
         if not self.is_loaded:
@@ -118,7 +115,7 @@ class SentimentAnalyzer:
                         "confidence": 0.0
                     })
 
-        logger.info(f"Batch sentiment done — {len(results)} texts processed")
+        logger.info(f"Batch sentiment done â€” {len(results)} texts processed")
         return results
 
     def get_sentiment_score(self, texts: list[str]) -> float:
@@ -135,5 +132,5 @@ class SentimentAnalyzer:
         return round(positive_count / len(results), 4)
 
 
-# Singleton — loaded once at startup
+# Singleton â€” loaded once at startup
 sentiment_analyzer = SentimentAnalyzer()
