@@ -1,44 +1,38 @@
 from fastapi import APIRouter, HTTPException
 from loguru import logger
+from langchain_groq import ChatGroq
+import os
+from dotenv import load_dotenv
 
+load_dotenv(override=True)
 from app.models.schemas import AgentQueryRequest, AgentQueryResponse
-from app.agents.product_agent import get_agent, extract_product_ids
+from app.ml.collaborative import collaborative_filter
 
 router = APIRouter()
 
-
 @router.post("/agent/query", response_model=AgentQueryResponse)
 async def agent_query(request: AgentQueryRequest):
-    """
-    Natural language product search via LangChain agent.
-
-    - Input:  user_id + natural language query
-    - Output: agent response + product IDs mentioned
-    """
     logger.info(f"Agent query — user: {request.user_id}, query: {request.query}")
-
     try:
-        agent = get_agent()
+        recs = collaborative_filter.get_recommendations(request.user_id, n=5)
+        products = [r["product_id"] for r in recs["recommendations"]]
 
-        # Inject user_id into query so agent can call recommendation tool
-        enriched_query = f"User ID: {request.user_id}\nQuery: {request.query}"
-
-        result = await agent.ainvoke({"input": enriched_query})
-        response_text = result.get("output", "")
-
-        # Extract any product IDs mentioned in response
-        products_mentioned = extract_product_ids(response_text)
-
-        logger.info(f"Agent response generated — {len(products_mentioned)} products mentioned")
-
-        return AgentQueryResponse(
-            response=response_text,
-            products_mentioned=products_mentioned
+        llm = ChatGroq(
+            model="llama-3.3-70b-versatile",
+            temperature=0,
+            api_key=os.environ.get("GROQ_API_KEY")
         )
 
+        prompt = f"""You are a NexCart product advisor. 
+User query: {request.query}
+Available products: {products}
+Give a helpful 2-3 sentence response mentioning these product IDs."""
+
+        response = llm.invoke(prompt)
+        return AgentQueryResponse(
+            response=response.content,
+            products_mentioned=products
+        )
     except Exception as e:
         logger.error(f"Agent query failed: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Agent query failed: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=str(e))
