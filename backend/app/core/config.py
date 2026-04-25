@@ -21,10 +21,11 @@ class Settings(BaseSettings):
     COLD_START_THRESHOLD: int = 5
 
     model_config = SettingsConfigDict(
-        env_file=".env",
-        case_sensitive=True,
-        extra="ignore"
-    )
+    env_file=".env",
+    env_file_encoding="utf-8",
+    case_sensitive=True,
+    extra="ignore"
+)
 
 
 @lru_cache()
