@@ -1,3 +1,5 @@
+import os
+
 from langchain_groq import ChatGroq
 from langchain.agents import AgentExecutor, create_openai_functions_agent
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -36,11 +38,12 @@ def create_product_agent() -> AgentExecutor:
     Create and return a LangChain AgentExecutor with 3 tools.
     Uses Groq Llama 3.1 70B — NOT OpenAI.
     """
-    # Groq LLM
+    import os
+    os.environ["GROQ_API_KEY"] = settings.GROQ_API_KEY
+
     llm = ChatGroq(
         model="llama-3.1-70b-versatile",
-        temperature=0,
-        api_key=settings.GROQ_API_KEY
+        temperature=0
     )
 
     # Tools list
