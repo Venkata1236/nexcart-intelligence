@@ -8,25 +8,26 @@ from loguru import logger
 from app.core.config import settings
 from app.agents.tools import get_recommendations, search_by_sentiment, get_product_detail
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv(
+    dotenv_path=os.path.join(os.path.dirname(__file__), "..", "..", ".env"),
+    override=True
+)
 
 # ─────────────────────────────────────────
 # SYSTEM PROMPT
 # ─────────────────────────────────────────
 
-SYSTEM_PROMPT = """You are a helpful product advisor for NexCart — a smart retail platform.
+SYSTEM_PROMPT = """You are a helpful product advisor for NexCart.
 
-Your job is to help users find the best products using:
-- Personalized recommendations based on their purchase history
-- Sentiment analysis on product reviews
-- Detailed product information
+When a user asks about products, you MUST use the available tools to get real data.
+ALWAYS call get_recommendations first to get product suggestions.
+Then use get_product_detail to get sentiment for specific products.
 
-Guidelines:
-- Always mention sentiment scores when recommending products
-- Flag hidden gems — high quality products with low visibility
-- Be concise and specific in your responses
-- If a user is new, explain you are showing popular products
-- Always use the available tools before answering product questions
-"""
+Never respond without using at least one tool first.
+Always mention product IDs and sentiment scores in your response."""
 
 
 # ─────────────────────────────────────────
@@ -34,40 +35,30 @@ Guidelines:
 # ─────────────────────────────────────────
 
 def create_product_agent() -> AgentExecutor:
-    """
-    Create and return a LangChain AgentExecutor with 3 tools.
-    Uses Groq Llama 3.1 70B — NOT OpenAI.
-    """
-    import os
-    os.environ["GROQ_API_KEY"] = settings.GROQ_API_KEY
-
     llm = ChatGroq(
-        model="llama-3.1-70b-versatile",
-        temperature=0
-    )
+    model="llama-3.3-70b-versatile",
+    temperature=0,
+    api_key=os.environ.get("GROQ_API_KEY")
+)
 
-    # Tools list
     tools = [
         get_recommendations,
         search_by_sentiment,
         get_product_detail
     ]
 
-    # Prompt template
     prompt = ChatPromptTemplate.from_messages([
         ("system", SYSTEM_PROMPT),
         ("human", "{input}"),
         MessagesPlaceholder(variable_name="agent_scratchpad")
     ])
 
-    # Create agent
     agent = create_openai_functions_agent(
         llm=llm,
         tools=tools,
         prompt=prompt
     )
 
-    # Wrap in executor
     agent_executor = AgentExecutor(
         agent=agent,
         tools=tools,
