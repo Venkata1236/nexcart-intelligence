@@ -4,7 +4,7 @@ import ProductGrid from "../components/ProductGrid";
 import SentimentFilter from "../components/SentimentFilter";
 import NLSearchBar from "../components/NLSearchBar";
 
-const DEFAULT_USER = "A3SGXH7AUHU8GW";
+const DEFAULT_USER = "A17MURLSVTLNKN";
 
 const StorePage = () => {
   const [userId] = useState(DEFAULT_USER);
